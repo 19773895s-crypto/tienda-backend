@@ -27,7 +27,13 @@ const conexion = mysql.createPool({
 // Prueba de conexión al arrancar (solo para ver el mensaje en consola)
 conexion.getConnection((err, con) => {
   if (err) {
-    console.error('Error de conexión: ', err.message);
+    const codigos = err.errors ? err.errors.map(e => e.code).join(', ') : '';
+    console.error('Error de conexión:', err.code || '', err.message || '', codigos);
+    console.error('Variables -> DB_HOST:', process.env.DB_HOST ? 'definida' : 'FALTA',
+      '| DB_USER:', process.env.DB_USER ? 'definida' : 'FALTA',
+      '| DB_PASSWORD:', process.env.DB_PASSWORD ? 'definida' : 'FALTA',
+      '| DB_NAME:', process.env.DB_NAME ? 'definida' : 'FALTA',
+      '| DB_PORT:', process.env.DB_PORT || 'FALTA');
     return;
   }
   console.log('Conectado a MySQL');
